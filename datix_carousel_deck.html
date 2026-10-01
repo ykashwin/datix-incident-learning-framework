@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>How Incident Reviews for Datix Actually Work - LinkedIn Carousel Deck</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
+    :root {
+      --bg-dark: #090e17;
+      --card-bg: #111a28;
+      --card-border: #1e2e45;
+      --text-main: #f8fafc;
+      --text-muted: #8fa0b5;
+      --brand-blue: #005EB8;      /* NHS Blue */
+      --brand-cyan: #00A9CE;      /* NHS Secondary */
+      --brand-teal: #2dd4bf;
+      --accent-coral: #fb7185;
+      --accent-amber: #f59e0b;
+      --accent-purple: #a855f7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #020408;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      padding: 32px 0;
+    }
+
+    .slide {
+      width: 1200px;
+      height: 675px;
+      background-color: var(--bg-dark);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 40px 48px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      page-break-after: always;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Ambient lighting */
+    .slide::before {
+      content: "";
+      position: absolute;
+      top: -120px;
+      right: -120px;
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, rgba(0, 169, 206, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Header */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+
+    .tagline {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--brand-cyan);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .slide-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.25;
+    }
+
+    .slide-number {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    /* Content Area */
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Footer */
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--card-border);
+      padding-top: 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .footer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 94, 184, 0.15);
+      border: 1px solid rgba(0, 94, 184, 0.4);
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: #38bdf8;
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    /* COVER SLIDE: Acute Digital Bedboard Layout */
+    .cover-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 28px;
+      align-items: center;
+      height: 100%;
+    }
+
+    .bedboard-mockup {
+      background: #0d1522;
+      border: 1px solid #1e3552;
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'Inter', sans-serif;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.5);
+    }
+
+    .bedboard-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1c2e47;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+
+    .bedboard-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .epma-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .epma-table th {
+      text-align: left;
+      padding: 6px 8px;
+      color: var(--text-muted);
+      border-bottom: 1px solid #1c2e47;
+      font-weight: 600;
+    }
+
+    .epma-table td {
+      padding: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: #cbd5e1;
+    }
+
+    .alert-pill-red {
+      background: rgba(251, 113, 133, 0.15);
+      border: 1px solid var(--accent-coral);
+      color: var(--accent-coral);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .alert-pill-amber {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--accent-amber);
+      color: var(--accent-amber);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .alert-pill-green {
+      background: rgba(45, 212, 191, 0.15);
+      border: 1px solid var(--brand-teal);
+      color: var(--brand-teal);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    /* Grids & Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 22px;
+    }
+
+    .card-negative { border-top: 4px solid var(--accent-coral); }
+    .card-positive { border-top: 4px solid var(--brand-teal); }
+
+    .card-heading {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+
+    .card-item-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    /* 5 Stages */
+    .stages-container {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .stage-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .stage-card::after {
+      content: "➔";
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      color: var(--brand-cyan);
+      z-index: 10;
+    }
+
+    .stage-card:last-child::after { content: ""; }
+
+    .stage-step {
+      font-size: 10px;
+      font-weight: 800;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      padding: 2px 6px;
+      border-radius: 4px;
+      width: fit-content;
+      margin-bottom: 10px;
+    }
+
+    .stage-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .stage-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Hierarchy Levels */
+    .hierarchy-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .hierarchy-level {
+      display: flex;
+      align-items: center;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .hl-1 { background: rgba(45, 212, 191, 0.15); border-left: 5px solid var(--brand-teal); }
+    .hl-2 { background: rgba(56, 189, 248, 0.15); border-left: 5px solid #38bdf8; }
+    .hl-3 { background: rgba(168, 85, 247, 0.15); border-left: 5px solid var(--accent-purple); }
+    .hl-4 { background: rgba(245, 158, 11, 0.15); border-left: 5px solid var(--accent-amber); }
+    .hl-5 { background: rgba(251, 113, 133, 0.15); border-left: 5px solid var(--accent-coral); }
+
+    .hl-tier {
+      width: 170px;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hl-example {
+      flex: 1;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .hl-rating {
+      font-weight: 700;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(0,0,0,0.3);
+    }
+
+    /* Stats */
+    .stats-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 54px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    @media print {
+      body {
+        background: none;
+        padding: 0;
+        gap: 0;
+      }
+      .slide {
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        width: 100vw;
+        height: 100vh;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SLIDE 1: COVER WITH ELECTRONIC PRESCRIBING & DIGITAL BEDBOARD UI -->
+  <div class="slide">
+    <div class="slide-header" style="border:none; margin-bottom: 0;">
+      <div class="tagline">Research Publication Series &bull; Technical Working Paper</div>
+      <div class="slide-number">Slide 1 of 7</div>
+    </div>
+    <div class="slide-content">
+      <div class="cover-grid">
+        <div>
+          <div style="display:inline-flex; align-items:center; gap:8px; background: rgba(0, 94, 184, 0.2); border: 1px solid var(--brand-blue); color: #38bdf8; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; margin-bottom: 14px;">
+            <span>NHS PSIRF</span> &bull; <span>Healthcare Systems Engineering</span>
+          </div>
+          <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size: 34px; font-weight:800; line-height:1.2; margin-bottom: 12px;">
+            How Incident Reviews for <span style="color: #00A9CE;">Datix (now RLDatix)</span> Actually Work
+          </h1>
+          <p style="font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 20px;">
+            A frontline operational inquiry: Moving clinical risk from punitive individual scrutiny into resilient systems-level engineering.
+          </p>
+          <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 16px; font-size: 12px;">
+            <div style="color: #fff; font-weight: 700;">Ashwin Yadhav Kumar</div>
+            <div style="color: var(--text-muted); font-size: 11px;">Independent Healthcare Systems &amp; Operational Analytics Researcher</div>
+            <div style="margin-top: 6px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #38bdf8;">
+              DOI: 10.5281/zenodo.23071323 &bull; CC BY 4.0
+            </div>
+          </div>
+        </div>
+
+        <!-- ACUTE DIGITAL BEDBOARD & ePMA DASHBOARD SIMULATION -->
+        <div class="bedboard-mockup">
+          <div class="bedboard-topbar">
+            <div class="bedboard-title">
+              <span class="live-dot"></span>
+              <span>WARD 4B &bull; ACUTE ELECTRONIC BEDBOARD</span>
+            </div>
+            <span style="font-size: 10px; color: var(--text-muted); font-family: monospace;">ePMA v4.2 &bull; LIVE</span>
+          </div>
+          
+          <table class="epma-table">
+            <thead>
+              <tr>
+                <th>Bay</th>
+                <th>Prescription</th>
+                <th>Sched.</th>
+                <th>Sepsis Clock</th>
+                <th>Datix Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background: rgba(251, 113, 133, 0.08);">
+                <td style="font-weight: 700; color: #fff;">Bed 08</td>
+                <td>IV Piperacillin / Tazobactam</td>
+                <td>08:00</td>
+                <td><span class="alert-pill-red">+4.2h DELAY</span></td>
+                <td><span class="alert-pill-amber">INC-40912 TRIAGED</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight: 700; color: #fff;">Bed 09</td>
+                <td>IV Vancomycin Stat</td>
+                <td>11:30</td>
+                <td><span class="alert-pill-amber">25m REMAINING</span></td>
+                <td><span style="color: var(--text-muted); font-size: 10px;">Infusion Active</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight: 700; color: #fff;">Bed 10</td>
+                <td>Oral Co-amoxiclav</td>
+                <td>12:00</td>
+                <td><span class="alert-pill-green">ON TRACK</span></td>
+                <td><span style="color: var(--text-muted); font-size: 10px;">Reconciled</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight: 700; color: #fff;">Bed 11</td>
+                <td>IV Gentamicin</td>
+                <td>14:00</td>
+                <td><span class="alert-pill-green">ON TRACK</span></td>
+                <td><span style="color: var(--text-muted); font-size: 10px;">Levels Verified</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="margin-top: 12px; padding: 8px 10px; background: rgba(0,0,0,0.3); border-radius: 6px; font-size: 10px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center;">
+            <span>Ward Capacity: <strong>104% (2 Bed Surges)</strong></span>
+            <span style="color: var(--brand-teal);">Kanban Restock: <strong>Active</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div>License: CC BY 4.0 Open Access</div>
+      <div>Swipe left for key findings &rarr;</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: THE PROBLEM -->
+  <div class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="tagline">Clinical Governance Dilemma</div>
+        <div class="slide-title">The Flaw in Individual Blame</div>
+      </div>
+      <div class="slide-number">Slide 2 of 7</div>
+    </div>
+    <div class="slide-content">
+      <div class="grid-2">
+        <div class="card card-negative">
+          <div class="card-heading" style="color: var(--accent-coral);">
+            <span>&#9888;</span> The Punitive Reflex (Person-Centred)
+          </div>
+          <div class="card-item">
+            <div class="card-item-label">Default Question</div>
+            <div>"Who made the omission, and why wasn't policy followed?"</div>
+          </div>
+          <div class="card-item">
+            <div class="card-item-label">Prescribed "Fix"</div>
+            <div>Reflective statements, mandatory retraining, and informal reprimand.</div>
+          </div>
+          <div class="card-item">
+            <div class="card-item-label">Ward Consequence</div>
+            <div>Under-reporting near misses due to fear; latent errors recur within months.</div>
+          </div>
+        </div>
+
+        <div class="card card-positive">
+          <div class="card-heading" style="color: var(--brand-teal);">
+            <span>&#10003;</span> The Systems Reality (Reason Model)
+          </div>
+          <div class="card-item">
+            <div class="card-item-label">Systems-Level Question</div>
+            <div>"What latent vulnerabilities allowed this defense failure to breach the ward?"</div>
+          </div>
+          <div class="card-item">
+            <div class="card-item-label">Contributory Causes</div>
+            <div>Staffing spikes, cognitive overload, alert fatigue, and delayed cannulation access.</div>
+          </div>
+          <div class="card-item">
+            <div class="card-item-label">Governance Consequence</div>
+            <div>Psychological safety increases; engineered workflows prevent recurrence.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-badge">PSIRF Core Philosophy</div>
+      <div>10.5281/zenodo.23071323</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: COMPARISON MATRIX -->
+  <div class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="tagline">Operational Paradigm Shift</div>
+        <div class="slide-title">Traditional Retribution vs Systems-Based Review</div>
+      </div>
+      <div class="slide-number">Slide 3 of 7</div>
+    </div>
+    <div class="slide-content">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-heading" style="color: var(--text-muted);">
+            Historic Model (Pre-PSIRF)
+          </div>
+          <div class="card-item">
+            <div class="card-item-label">Assumed Causation</div>
+            <div>Lack of individual vigilance or adherence by the bedside nurse.</div>
+          </div>
+          <div class="card-item">
+            <div class="card-item-label">Data Captured</div>
+            <div>Isolated symptom description without environmental context.</div>
+          </div>
+          <div class="card-item">
+            <div class="card-item-label">Action Strength</div>
+            <div>Low leverage: Passive policy circulation and email memos.</div>
+          </div>
+          <div class="card-item">
+            <div class="card-item-label">Frontline Safety Culture</div>
+            <div>High defensiveness, silence around near-miss hazards, burnout.</div>
+          </div>
+        </div>
+
+        <div class="card" style="background: rgba(0, 169, 206, 0.05); border-color: rgba(0, 169, 206, 0.3);">
+          <div class="card-heading" style="color: #00A9CE;">
+            Modern Datix Systems Approach
+          </div>
+          <div class="card-item">
+            <div class="card-item-label">Assumed Causation</div>
+            <div>Latent operational design defects setting clinicians up to fail.</div>
+          </div>
+          <div class="card-item">
+            <div class="card-item-label">Data Captured</div>
+            <div>Yorkshire Framework: staff ratios, equipment access, alert volumes.</div>
+          </div>
+          <div class="card-item">
+            <div class="card-item-label">Action Strength</div>
+            <div>High leverage: Forcing functions, automated pharmacy alerts, rota restructuring.</div>
+          </div>
+          <div class="card-item">
+            <div class="card-item-label">Frontline Safety Culture</div>
+            <div>Just Culture transparency, multidisciplinary huddles, closed-loop audits.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-badge">NHS Quality Strategy</div>
+      <div>10.5281/zenodo.23071323</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: THE 5-STAGE RESOLUTION PATHWAY -->
+  <div class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="tagline">Process Architecture</div>
+        <div class="slide-title">The 5-Stage Datix Incident Resolution Pathway</div>
+      </div>
+      <div class="slide-number">Slide 4 of 7</div>
+    </div>
+    <div class="slide-content">
+      <div class="stages-container">
+        <div class="stage-card">
+          <div class="stage-step">Stage 1</div>
+          <div class="stage-name">Incident Logging</div>
+          <div class="stage-desc">
+            Clinician submits objective factual timeline and immediate containment actions within 12 hours.
+          </div>
+        </div>
+
+        <div class="stage-card">
+          <div class="stage-step">Stage 2</div>
+          <div class="stage-name">Triage &amp; Risk Matrix</div>
+          <div class="stage-desc">
+            Governance team reviews via 5&times;5 matrix; initiates Duty of Candour (Regulation 20) if moderate harm.
+          </div>
+        </div>
+
+        <div class="stage-card">
+          <div class="stage-step">Stage 3</div>
+          <div class="stage-name">Systems Review</div>
+          <div class="stage-desc">
+            Multidisciplinary Swarm Huddles or After Action Reviews evaluate environmental contributors.
+          </div>
+        </div>
+
+        <div class="stage-card">
+          <div class="stage-step">Stage 4</div>
+          <div class="stage-name">SMART Action Fix</div>
+          <div class="stage-desc">
+            Hierarchy of Controls applied; physical &amp; digital safeguards prioritized with accountable leads.
+          </div>
+        </div>
+
+        <div class="stage-card">
+          <div class="stage-step">Stage 5</div>
+          <div class="stage-name">Closed-Loop Audit</div>
+          <div class="stage-desc">
+            90-day clinical verification audit, reporter feedback delivered, and national LFPSE sync.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-badge">Closed-Loop Governance</div>
+      <div>10.5281/zenodo.23071323</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: APPLIED CASE STUDY -->
+  <div class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="tagline">Applied Clinical Deconstruction</div>
+        <div class="slide-title">Case Study: 4-Hour IV Sepsis Antibiotic Delay</div>
+      </div>
+      <div class="slide-number">Slide 5 of 7</div>
+    </div>
+    <div class="slide-content">
+      <div class="card" style="padding: 18px; margin-bottom: 14px; background: rgba(56, 189, 248, 0.05);">
+        <div style="font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px;">The Clinical Scenario:</div>
+        <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+          A post-operative patient developed a systemic fever of 38.9&deg;C. Intravenous broad-spectrum antibiotics prescribed stat were administered 4 hours late. Traditional investigations would attribute fault to the bedside nurse.
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card" style="padding: 16px;">
+          <div style="font-size: 13px; font-weight: 700; color: var(--accent-amber); margin-bottom: 8px;">
+            Latent Contributory Factors (YCFF)
+          </div>
+          <ul style="font-size: 11px; color: var(--text-muted); line-height: 1.7; padding-left: 16px;">
+            <li><strong style="color: #fff;">Workload Shock:</strong> Ward at 104% capacity with 2 acute admissions.</li>
+            <li><strong style="color: #fff;">Consumable Depletion:</strong> Dedicated cannula packs missing from clean utility.</li>
+            <li><strong style="color: #fff;">Alert Saturation:</strong> ePMA generated 14 non-urgent alarms in the prior hour.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="padding: 16px;">
+          <div style="font-size: 13px; font-weight: 700; color: var(--brand-teal); margin-bottom: 8px;">
+            Engineered Corrective Interventions
+          </div>
+          <ul style="font-size: 11px; color: var(--text-muted); line-height: 1.7; padding-left: 16px;">
+            <li><strong style="color: #fff;">Pharmacy Restock:</strong> Visual Kanban 2-bin replenishment established.</li>
+            <li><strong style="color: #fff;">Hard Forcing Stop:</strong> ePMA locks out routine documentation until stat doses clear.</li>
+            <li><strong style="color: #fff;">Auto-Escalation:</strong> Automatic 60-min bleep alert triggered to Critical Care Outreach.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-badge">Yorkshire Contributory Factors Framework</div>
+      <div>10.5281/zenodo.23071323</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: HIERARCHY OF CONTROLS -->
+  <div class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="tagline">Risk Engineering</div>
+        <div class="slide-title">Action Design: The Hierarchy of Controls</div>
+      </div>
+      <div class="slide-number">Slide 6 of 7</div>
+    </div>
+    <div class="slide-content">
+      <div class="hierarchy-stack">
+        <div class="hierarchy-level hl-1">
+          <div class="hl-tier" style="color: var(--brand-teal);">1. Forcing Functions</div>
+          <div class="hl-example">Hard digital stops: ePMA prevents routine medication signoff until pending stat antibiotic doses are administered.</div>
+          <div class="hl-rating" style="color: var(--brand-teal);">Strongest Defense</div>
+        </div>
+
+        <div class="hierarchy-level hl-2">
+          <div class="hl-tier" style="color: #38bdf8;">2. Physical Automation</div>
+          <div class="hl-example">Automated barcode bedside scanning and smart infusion pump dose error reduction systems.</div>
+          <div class="hl-rating" style="color: #38bdf8;">High Reliability</div>
+        </div>
+
+        <div class="hierarchy-level hl-3">
+          <div class="hl-tier" style="color: var(--accent-purple);">3. Visual Management</div>
+          <div class="hl-example">Acute ward electronic bedboards with automated countdown sepsis clocks visible to full multi-disciplinary team.</div>
+          <div class="hl-rating" style="color: var(--accent-purple);">Moderate Defense</div>
+        </div>
+
+        <div class="hierarchy-level hl-4">
+          <div class="hl-tier" style="color: var(--accent-amber);">4. Administrative Policy</div>
+          <div class="hl-example">Standard Operating Procedure updates, nursing handover checklists, and dual signoff forms.</div>
+          <div class="hl-rating" style="color: var(--accent-amber);">Vulnerable</div>
+        </div>
+
+        <div class="hierarchy-level hl-5">
+          <div class="hl-tier" style="color: var(--accent-coral);">5. Re-education</div>
+          <div class="hl-example">Mandatory refresher e-learning on medication timing (Zero defense against systemic acute ward overload).</div>
+          <div class="hl-rating" style="color: var(--accent-coral);">Ineffective Alone</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-badge">Human Factors Engineering</div>
+      <div>10.5281/zenodo.23071323</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: AUDIT RESULTS & CONCLUSION -->
+  <div class="slide">
+    <div class="slide-header">
+      <div>
+        <div class="tagline">Clinical Governance Verification</div>
+        <div class="slide-title">90-Day Post-Implementation Audit Results</div>
+      </div>
+      <div class="slide-number">Slide 7 of 7</div>
+    </div>
+    <div class="slide-content">
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-num" style="color: var(--brand-cyan);">+34%</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px;">Timely IV Antibiotic Administration</div>
+          <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+            Achieved via Kanban utility restock, automated pharmacy stat triggers, and real-time electronic bedboard tracking.
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-num" style="color: var(--brand-teal);">+22%</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px;">Near-Miss &amp; Hazard Reporting</div>
+          <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+            Clinicians proactively logged equipment shortages and digital hurdles once fear of individual blame was removed.
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-size: 12px; font-weight: 700; color: #fff;">Access Full Working Paper &amp; Open Source Framework</div>
+          <div style="font-size: 11px; color: var(--text-muted);">
+            DOI: https://doi.org/10.5281/zenodo.23071323 &bull; GitHub: https://github.com/ykashwin/datix-incident-learning-framework
+          </div>
+        </div>
+        <div class="footer-badge" style="font-size: 11px;">Author: Ashwin Yadhav Kumar</div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <div class="footer-badge">Closed-Loop Verification</div>
+      <div>End of Slide Deck</div>
+    </div>
+  </div>
+
+</body>
+</html>
